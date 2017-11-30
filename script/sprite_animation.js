@@ -4,7 +4,7 @@
  * Establish starting values to draw sprite as soon as document loads
  */
 
-var canvasHeight = 200;
+var canvasHeight = 160;
 
 // Sprite dimensions
 var spriteWidth = 1600;
@@ -18,16 +18,19 @@ var width = spriteWidth/cols;
 var height = spriteHeight;
 
 // Variables to identify starting and ending frames
-var currentFrame = 0;
+var currentFrame;
 var frameCount = 10;
 
 // X and Y coordinates to render frame
-var x = 0;
-var y = 0;
+var x;
+var y;
 
-// X and Y coordinates of the sprite to get the single frame
-var srcX = 0;
-var srcY = 0;
+// Represents X and Y coordinates of the sprite
+var srcX;
+var srcY;
+
+// Apply starting values for the sprite
+startingValues();
 
 // Fetching canvas
 var canvas = document.getElementById('canvas');
@@ -57,7 +60,6 @@ window.onload = draw;
 /*
  * Functions that will be attached to Button onClick events
  */
-
 function startButton(){
     clearInterval(id);
     id = !id;
@@ -70,11 +72,27 @@ function startButton(){
     button1.innerText = "Stop";
     id = setInterval(move, 125);
 }
+
+function resetButton() {
+    if (!id) {
+        clearInterval(id);
+        clear();
+        startingValues();
+        draw();
+    } else {
+        alert("Stop the sprite before trying to reset");
+    }
+}
+
 /*
- * Functions that will be used to establish functionality
+ * Functions that will be used to establish functionality and animation
  */
 function draw() {
     ctx.drawImage(character, srcX, srcY, width, height, x, y, width, height);
+}
+
+function clear() {
+    ctx.clearRect(x, y, width, height);
 }
 
 function updateFrame() {
@@ -83,17 +101,25 @@ function updateFrame() {
 
     // Calculate X coordinate for the sprite sheet
     srcX = currentFrame * width;
-
-    ctx.clearRect(x, y, width, height);
+    clear();
 }
 
 function move() {
     updateFrame();
 
     x += 5;
-    ctx.drawImage(character, srcX, srcY, width, height, x, y, width, height);
+    draw();
 }
 
+function startingValues() {
+    // Frame will begin at 0
+    currentFrame = 0;
 
+    // Starting position on canvas
+    x = 0;
+    y = 0;
 
-
+    // Starting at the first sprite
+    srcX = 0;
+    srcY = 0;
+}
